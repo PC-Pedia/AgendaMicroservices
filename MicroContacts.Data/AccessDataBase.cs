@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using Dapper;
 using Microsoft.Data.Sqlite;
 
 namespace MicroContacts.Data
@@ -19,43 +18,21 @@ namespace MicroContacts.Data
 			_connection = new SqliteConnection("Data Source=ContactsDb.db");
 	    }
 
-	    protected virtual void ExecuteNonQuery(SqliteCommand command)
+	    protected virtual IEnumerable<T> Query<T>(string query)
 	    {
-			_connection.Open();
-		    command.ExecuteNonQuery();
+		    _connection.Open();
+			var results = _connection.Query<T>(query);
 			_connection.Close();
+
+			return results;
 	    }
 
-		protected virtual void ExecuteNonQuery(string commandText)
-		{
-			var command = _connection.CreateCommand();
-			command.CommandText = commandText;
-			_connection.Open();
-			command.ExecuteNonQuery();
-
-			_connection.Close();
-		}
-
-		protected virtual SqliteDataReader ExecuteReader(SqliteCommand command)
+	    protected virtual void Save(string query)
 	    {
-			_connection.Open();
-		    var reader = command.ExecuteReader(CommandBehavior.CloseConnection);
+		    _connection.Open();
+		    _connection.Execute(query);
 			_connection.Close();
-
-		    return reader;
 	    }
-
-		protected virtual SqliteDataReader ExecuteReader(string query)
-		{
-			var command = _connection.CreateCommand();
-			command.CommandText = query;
-
-			_connection.Open();
-			var reader = command.ExecuteReader(CommandBehavior.CloseConnection);
-			_connection.Close();
-
-			return reader;
-		}
 
 		protected abstract void CreateTable();
     }

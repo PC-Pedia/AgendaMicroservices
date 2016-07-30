@@ -24,9 +24,8 @@ namespace MicroContactsServices
 
 	    public void Save(Contact contact)
 	    {
-		    if (contact?.Id == null)
+		    if (contact?.Id == 0)
 		    {
-			    contact.Id = Guid.NewGuid();
 			    _contactsData.Add(contact);
 		    }
 		    else
