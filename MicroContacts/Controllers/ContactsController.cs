@@ -35,8 +35,9 @@ namespace MicroContacts.Controllers
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody]string value)
+        public void Post([FromBody]Contact value)
         {
+			_contactsService.Save(value);
         }
 
         // PUT api/values/5

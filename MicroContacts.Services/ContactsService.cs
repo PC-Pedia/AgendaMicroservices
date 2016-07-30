@@ -21,5 +21,19 @@ namespace MicroContactsServices
 	    {
 		    return _contactsData.GetAll();
 	    }
+
+	    public void Save(Contact contact)
+	    {
+		    if (contact?.Id == null)
+		    {
+			    contact.Id = Guid.NewGuid();
+			    _contactsData.Add(contact);
+		    }
+		    else
+		    {
+				_contactsData.Update(contact);
+			}
+		    
+	    }
     }
 }

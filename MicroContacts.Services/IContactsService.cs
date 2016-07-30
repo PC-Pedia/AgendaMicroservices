@@ -9,5 +9,6 @@ namespace MicroContacts.Services
     public interface IContactsService
     {
 	    IEnumerable<Contact> GetAll();
+	    void Save(Contact contact);
     }
 }

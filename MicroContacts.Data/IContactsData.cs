@@ -8,7 +8,8 @@ namespace MicroContacts.Data
 {
     public interface IContactsData
     {
-	    void Save(Contact contact);
 	    IEnumerable<Contact> GetAll();
+	    void Add(Contact contact);
+	    void Update(Contact contact);
     }
 }
