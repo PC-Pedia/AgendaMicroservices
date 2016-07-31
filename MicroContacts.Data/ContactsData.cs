@@ -18,8 +18,17 @@ namespace MicroContacts.Data
 		}
 		protected override void CreateTable()
 		{
-			//base.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS Contacts(Id TEXT PRIMARY KEY, Name TEXT, Email TEXT)");
-			base.Save("CREATE TABLE IF NOT EXISTS Contacts(Id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Name TEXT, Email TEXT)");
+			base.Save("CREATE TABLE IF NOT EXISTS Contacts(Id TEXT PRIMARY KEY NOT NULL, Name TEXT, Email TEXT)");
+			//base.Save("CREATE TABLE IF NOT EXISTS Contacts(Id INT PRIMARY KEY AUTOINCREMENT NOT NULL, Name TEXT, Email TEXT)");
+		}
+
+		protected override IModel ConvertTo<T>(dynamic value)
+		{
+			return new Contact
+			       {
+				       Id = new Guid(value.Id),
+					   Name = value.Name
+			       };
 		}
 
 		public IEnumerable<Contact> GetAll()
@@ -37,7 +46,7 @@ namespace MicroContacts.Data
 
 		public void Add(Contact contact)
 		{
-			var query = $"INSERT INTO Contacts(Name, Email) VALUES('{contact.Name}', '{contact.Email}')";
+			var query = $"INSERT INTO Contacts(Id, Name, Email) VALUES('{contact.Id}', '{contact.Name}', '{contact.Email}')";
 
 			try
 			{
@@ -52,7 +61,7 @@ namespace MicroContacts.Data
 
 		public void Update(Contact contact)
 		{
-			var query = $"UPDATE Contacts SET Name='{contact.Name}', Email='{contact.Email}' WHERE Id = {contact.Id}";
+			var query = $"UPDATE Contacts SET Name='{contact.Name}', Email='{contact.Email}' WHERE Id = '{contact.Id}'";
 
 			try
 			{

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Dapper;
+using MicroContacts.Models;
 using Microsoft.Data.Sqlite;
 
 namespace MicroContacts.Data
@@ -18,10 +19,12 @@ namespace MicroContacts.Data
 			_connection = new SqliteConnection("Data Source=ContactsDb.db");
 	    }
 
-	    protected virtual IEnumerable<T> Query<T>(string query)
+	    protected virtual IEnumerable<T> Query<T>(string query) where T:IModel
 	    {
 		    _connection.Open();
-			var results = _connection.Query<T>(query);
+		    var results = _connection.Query(query)
+		                             .Select(x => ConvertTo<T>(x))
+		                             .Cast<T>();
 			_connection.Close();
 
 			return results;
@@ -35,5 +38,6 @@ namespace MicroContacts.Data
 	    }
 
 		protected abstract void CreateTable();
+	    protected abstract IModel ConvertTo<T>(dynamic value) where T: IModel;
     }
 }
